@@ -4,12 +4,20 @@ on:
   workflow_dispatch:
 
 jobs:
+  call-reusable-workflow:
+    strategy:
+      matrix:
+        nodeversion: [14, 16, 18, 20]
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      node: ${{ matrix.nodeversion }}
+
   build:
     runs-on: ubuntu-latest
+    needs: call-reusable-workflow  # Optional: Add dependency if required
     steps:
       - uses: actions/checkout@v4
       - name: Run a multi-line script
         run: |
           echo Add other actions to build,
-          echo test, and deploy to your project.
-    
+          echo test, and deploy to your project.  
